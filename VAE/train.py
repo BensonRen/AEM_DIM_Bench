@@ -38,16 +38,17 @@ def training_from_flag(flags):
 
 
 def retrain_different_dataset(index):
-     """
-     This function is to evaluate all different datasets in the model with one function call
-     """
-     from utils.helper_functions import load_flags
-     data_set_list = ["robotic_arm", "sine_wave", "ballistics", "meta_material"]
-     for eval_model in data_set_list:
-        flags = load_flags(os.path.join("models", eval_model))
-        flags.model_name = "retrain"+ str(index) + eval_model
-        flags.geoboundary = [-1,1,-1,1]
-        flags.batch_size = 1024
+    """
+    This function is to evaluate all different datasets in the model with one function call
+    """
+    from utils.helper_functions import load_flags
+    # data_set_list = ["Peurifoy"]
+    data_set_list = ["Chen"]
+    # data_set_list = ["Yang"]
+    #data_set_list = ["Peurifoy","Chen","Yang_sim"]
+    for eval_model in data_set_list:
+        flags = load_flags(os.path.join("models", eval_model+"_best_model"))
+        flags.model_name = "retrain" + str(index) + eval_model
         flags.train_step = 500
         flags.test_ratio = 0.2
         training_from_flag(flags)
@@ -92,13 +93,13 @@ if __name__ == '__main__':
     # Read the parameters to be set
     flags = flag_reader.read_flag()
 
-    hyperswipe()
+    # hyperswipe()
     # Call the train from flag function
     #training_from_flag(flags)
 
     # Do the retraining for all the data set to get the training 
-    #for i in range(10):
-    #    retrain_different_dataset(i)
+    for i in range(10):
+       retrain_different_dataset(i)
 
 
 

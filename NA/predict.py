@@ -197,7 +197,7 @@ def creat_mm_dataset():
 if __name__ == '__main__':
     # To create Meta-material dataset, use this line 
     #start = time.time()
-    #creat_mm_dataset()
+    creat_mm_dataset()
     #print('Time is spend on producing MM dataset is {}'.format(time.time()-start))
     
    
@@ -215,7 +215,7 @@ if __name__ == '__main__':
     #predict_ensemble_for_all('../Data/Yang_sim/state_dicts/', '/home/sr365/MM_Bench/MDN_temp/data', no_plot=False)  
     #predict_ensemble_for_all('../Data/Yang_sim/state_dicts/', '/home/sr365/mm_bench_multi_eval/VAE/Yang_sim', no_plot=True)  
     #predict_ensemble_for_all('../Data/Yang_sim/state_dicts/', '/home/sr365/mm_bench_multi_eval/cINN/Yang_sim', no_plot=True)  
-    predict_ensemble_for_all('../Data/Yang_sim/state_dicts/', '/home/sr365/mm_bench_multi_eval/MDN/Yang_sim', no_plot=True)  
+    #predict_ensemble_for_all('../Data/Yang_sim/state_dicts/', '/home/sr365/mm_bench_multi_eval/MDN/Yang_sim', no_plot=True)  
     """
     #predict_ensemble_for_all('../Data/Yang_sim/state_dicts/', 'data/', no_plot=False)  
     predict_ensemble_for_all('../Data/Yang_sim/state_dicts/', 'data_lr0.01/', no_plot=False)  

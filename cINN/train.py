@@ -47,22 +47,15 @@ def retrain_different_dataset(index):
     This function is to evaluate all different datasets in the model with one function call
     """
     from utils.helper_functions import load_flags
-    data_set_list = ["Chen_best_model"]
-    #reg_scale_list = [0, 1e-4, 1e-3, 1e-2, 1e-1]
-    #data_set_list = ["robotic_arm","sine_wave","ballistics","meta_material"]
+    # data_set_list = ["Peurifoy"]
+    # data_set_list = ["Chen"]
+    data_set_list = ["Yang"]
+    #data_set_list = ["Peurifoy","Chen","Yang_sim"]
     for eval_model in data_set_list:
-        #for reg_scale in reg_scale_list:
-        flags = load_flags(os.path.join("models", eval_model))
-        # 0124 trail
-        #flags.model_name = "retrain" + str(index) + str(reg_scale) + eval_model
-        #flags.reg_scale = reg_scale
+        flags = load_flags(os.path.join("models", eval_model+"_best_model"))
         flags.model_name = "retrain" + str(index) + eval_model
-        flags.batch_size = 1024
-        flags.geoboundary = [-1, 1, -1, 1]     # the geometry boundary of meta-material dataset is already normalized in current version
         flags.train_step = 500
         flags.test_ratio = 0.2
-        #flags.reg_scale = 0.08
-        flags.stop_threshold = -float('inf')
         training_from_flag(flags)
 
 def hyperswipe():
@@ -115,7 +108,7 @@ if __name__ == '__main__':
     flags = flag_reader.read_flag()
     
     #random_swipe()
-    hyperswipe()
+    # hyperswipe()
     
     # Call the train from flag function
     #training_from_flag(flags)
@@ -123,5 +116,5 @@ if __name__ == '__main__':
     #retrain_different_dataset(0)
 
     # Do the retraining for all the data set to get the training for reproducibility
-    #for i in range(5):
-    #    retrain_different_dataset(i)
+    for i in range(10):
+       retrain_different_dataset(i)

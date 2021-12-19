@@ -44,11 +44,17 @@ def cINN(flags):
 ##########
 # Subnet #
 ##########
-mid_layer = 1024
 def subnet_fc(c_in, c_out):
+    if c_in == 256:
+        return nn.Sequential(nn.Linear(c_in, 160), nn.ReLU(), 
+                                  nn.Linear(160, 160), nn.ReLU(),
+                                  nn.Linear(160, 160), nn.ReLU(),
+                                  nn.Linear(160,  c_out))
+    else:
+        mid_layer = 1024
     return nn.Sequential(nn.Linear(c_in, mid_layer), nn.ReLU(), 
-                         nn.Linear(mid_layer,mid_layer),nn.ReLU(),
-                         nn.Linear(mid_layer,  c_out))
+                        nn.Linear(mid_layer,mid_layer),nn.ReLU(),
+                        nn.Linear(mid_layer,  c_out))
 
 # def subnet_fc(c_in, c_out):
 #     #Original version of internal layer

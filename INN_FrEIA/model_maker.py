@@ -22,6 +22,8 @@ def INN(flags):
     :param flags: input flags from configuration
     :return: The INN network
     """
+    
+    mid_layer = 512 if 'Chen' in flags.data_set else 1024
     # Start from input layer
     nodes = [InputNode(flags.dim_tot, name='input')]
     # Recursively add the coupling layers and random permutation layer
@@ -40,12 +42,15 @@ def INN(flags):
 ##########
 # Subnet #
 ##########
-mid_layer = 1024
-def subnet_fc(c_in, c_out):
-    return nn.Sequential(nn.Linear(c_in, mid_layer), nn.ReLU(), 
-                         nn.Linear(mid_layer,mid_layer),nn.ReLU(),
-                         nn.Linear(mid_layer,  c_out))
 
+def subnet_fc(c_in, c_out):
+    if c_in == 267:
+        mid_layer = 512
+    else:
+        mid_layer = 1024
+    return nn.Sequential(nn.Linear(c_in, mid_layer), nn.ReLU(), 
+                        nn.Linear(mid_layer,mid_layer),nn.ReLU(),
+                        nn.Linear(mid_layer,  c_out))
 #def subnet_fc(c_in, c_out):
 #    #Original version of internal layer
 #    return nn.Sequential(nn.Linear(c_in, 160), nn.ReLU(), 

@@ -309,7 +309,7 @@ class Network(object):
             tk.record(1)
         return Ypred_file, Ytruth_file
 
-    def evaluate_multiple_time(self, time=200, save_dir='/home/sr365/mm_bench_multi_eval/cINN/'):
+    def evaluate_multiple_time(self, time=200, save_dir='../mm_bench_multi_eval/cINN/'):
         """
         Make evaluation multiple time for deeper comparison for stochastic algorithms
         :param save_dir: The directory to save the result

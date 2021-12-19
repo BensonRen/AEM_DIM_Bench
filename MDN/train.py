@@ -46,21 +46,19 @@ def training_from_flag(flags):
 
 
 def retrain_different_dataset(index):
-     """
-     This function is to evaluate all different datasets in the model with one function call
-     """
-     from utils.helper_functions import load_flags
-     data_set_list = ["meta_material","robotic_arm","sine_wave","ballistics"]
-     for train_model in data_set_list:
-        flags = load_flags(os.path.join("models", train_model))
-        #if train_model is 'meta_material':
-        #    flags.data_dir = os.path.join('../', 'Simulated_DataSets', 'Meta_material_Neural_Simulator')
-        flags.model_name = "retrain" + str(index) + train_model
-        flags.ckpt_dir = 'models/'
-        flags.batch_size = 1024
+    """
+    This function is to evaluate all different datasets in the model with one function call
+    """
+    from utils.helper_functions import load_flags
+    # data_set_list = ["Peurifoy"]
+    data_set_list = ["Chen"]
+    # data_set_list = ["Yang"]
+    #data_set_list = ["Peurifoy","Chen","Yang_sim"]
+    for eval_model in data_set_list:
+        flags = load_flags(os.path.join("models", eval_model+"_best_model"))
+        flags.model_name = "retrain" + str(index) + eval_model
         flags.train_step = 500
         flags.test_ratio = 0.2
-        flags.stop_threshold = -float('inf')
         training_from_flag(flags)
 
 def hyperswipe():
@@ -118,10 +116,10 @@ if __name__ == '__main__':
     # Read the parameters to be set
     flags = flag_reader.read_flag()
     
-    hyperswipe()
+    # hyperswipe()
     # Call the train from flag function
     #training_from_flag(flags)
 
     # Do the retraining for all the data set to get the training 
-    #for i in range(10):
-    #    retrain_different_dataset(i)
+    for i in range(10):
+       retrain_different_dataset(i)

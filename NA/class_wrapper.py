@@ -106,7 +106,7 @@ class Network(object):
             #BDY_loss = self.flags.BDY_strength*torch.sum(BDY_loss_all)
         
         # Adding a pairwise MD loss for back propagation, it needs to be open as well as in the signified start and end epoch
-        if  self.flags.md_coeff > 0 and G is not None and epoch > self.flags.md_start and epoch < self.flags.md_end:
+        if  hasattr(self.flags, 'mde_coeff') and self.flags.md_coeff > 0 and G is not None and epoch > self.flags.md_start and epoch < self.flags.md_end:
             pairwise_dist_mat = torch.cdist(G, G, p=2)      # Calculate the pairwise distance
             MD_loss = torch.mean(relu(- pairwise_dist_mat + self.flags.md_radius))
             MD_loss *= self.flags.md_coeff
