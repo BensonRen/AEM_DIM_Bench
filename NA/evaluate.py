@@ -87,23 +87,13 @@ def evaluate_from_model(model_dir, multi_flag=False, eval_data_all=False, save_m
     flags.backprop_step = eval_flags.backprop_step
     #flags.test_ratio = 0.02
 
-    if flags.data_set != None: #== 'Yang_sim':
+    if flags.data_set != None: 
         save_Simulator_Ypred = False
         print("this is Yang sim dataset, setting the save_Simulator_Ypred to False")
     flags.batch_size = 1                            # For backprop eval mode, batchsize is always 1
     flags.BDY_strength = BDY_strength
     flags.train_step = eval_flags.train_step
     flags.backprop_step = 300 
-
-    # MD Loss: new version
-    if md_coeff is not None:
-        flags.md_coeff = md_coeff
-    if md_start is not None:
-        flags.md_start = md_start
-    if md_end is not None:
-        flags.md_end = md_end
-    if md_radius is not None:
-        flags.md_radius = md_radius
 
     ############################# Thing that are changing #########################
     flags.lr = init_lr
@@ -113,15 +103,6 @@ def evaluate_from_model(model_dir, multi_flag=False, eval_data_all=False, save_m
     ###############################################################################
     
     print(flags)
-
-    # if flags.data_set == 'Peurifoy':
-    #     flags.eval_batch_size = 10000
-    # elif flags.data_set == 'Chen':
-    #     flags.eval_batch_size = 10000
-    # elif flags.data_set == 'Yang' or flags.data_set == 'Yang_sim':
-    #     flags.eval_batch_size = 2000
-    #
-    # flags.batch_size = flags.eval_batch_size
 
     # Get the data
     train_loader, test_loader = data_reader.read_data(flags, eval_data_all=eval_data_all)
@@ -141,7 +122,7 @@ def evaluate_from_model(model_dir, multi_flag=False, eval_data_all=False, save_m
     if multi_flag:
         #dest_dir = '/home/sr365/mm_bench_multi_eval_Chen_sweep/NA_init_lr_{}_decay_{}_batch_{}_bp_{}_noise_lvl_{}/'.format(init_lr, lr_decay, flags.eval_batch_size, flags.backprop_step, noise_level)
         #dest_dir = '/home/sr365/mm_bench_compare_MDNA_loss/NA_init_lr_{}_decay_{}_MD_loss_{}'.format(flags.lr, flags.lr_decay_rate, flags.md_coeff)
-        dest_dir = '/home/sr365/mm_bench_multi_eval/NA'
+        dest_dir = '../mm_bench_multi_eval/NA'
         #dest_dir = '/home/sr365/MM_bench_multi_eval/NA_RMSprop/'
         #dest_dir = '/data/users/ben/multi_eval/NA_lr' + str(init_lr)  + 'bdy_' + str(BDY_strength)+'/' 
         #dest_dir = os.path.join('/home/sr365/MDNA_temp/', save_dir)
@@ -153,6 +134,7 @@ def evaluate_from_model(model_dir, multi_flag=False, eval_data_all=False, save_m
                                                 save_misc=save_misc, MSE_Simulator=MSE_Simulator,
                                                 save_Simulator_Ypred=save_Simulator_Ypred,
                                                 noise_level=noise_level)
+        return
     else:
         # Creat the directory is not exist
         if not os.path.isdir(save_dir):
@@ -162,13 +144,13 @@ def evaluate_from_model(model_dir, multi_flag=False, eval_data_all=False, save_m
                                              save_Simulator_Ypred=save_Simulator_Ypred,
                                              noise_level=noise_level)
         #pred_file, truth_file = ntwk.evaluate(save_dir='data/'+flags.data_set,save_misc=save_misc, MSE_Simulator=MSE_Simulator, save_Simulator_Ypred=save_Simulator_Ypred)
-    return 
-    if 'Yang' in flags.data_set:
-        return
-    # Plot the MSE distribution
-    MSE = plotMSELossDistrib(pred_file, truth_file, flags)
-    print("Evaluation finished")
-    return MSE
+    return
+    # if 'Yang' in flags.data_set:
+    #     return
+    # # Plot the MSE distribution
+    # MSE = plotMSELossDistrib(pred_file, truth_file, flags)
+    # print("Evaluation finished")
+    # return MSE
 
 
 def evaluate_all(models_dir="models"):
@@ -187,16 +169,9 @@ def evaluate_different_dataset(multi_flag, eval_data_all, save_Simulator_Ypred=F
     """
     ## Evaluate all models with "reatrain" and dataset name in models/
     for model in os.listdir('models/'):
-        if 'best' in model and 'Peurifoy' in model: 
-        #if 'best' in model and 'Chen' in model: 
+        if 'best' in model and 'new' in model and 'Yang' in model: 
             evaluate_from_model(model, multi_flag=multi_flag, 
                         eval_data_all=eval_data_all,save_Simulator_Ypred=save_Simulator_Ypred, MSE_Simulator=MSE_Simulator)
-    
-    # Single model evaluation
-    #model = 'Peurifoy_best_model'
-    #evaluate_from_model(model, multi_flag=multi_flag, 
-    #                 eval_data_all=eval_data_all,save_Simulator_Ypred=save_Simulator_Ypred, MSE_Simulator=MSE_Simulator)
-
 
 def hyper_sweep_evaluation(multi_flag, eval_data_all, save_Simulator_Ypred=False, MSE_Simulator=False,
                          save_file='hypersweep_results.txt'):

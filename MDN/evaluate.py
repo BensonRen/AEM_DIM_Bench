@@ -114,7 +114,7 @@ def evaluate_different_dataset(multi_flag=False, eval_data_all=False, modulized_
     This function is to evaluate all different datasets in the model with one function call
     """
     for model in os.listdir('models/'):
-        if 'best' in model:
+        if 'new_best' in model:
             evaluate_from_model(model, multi_flag=multi_flag, 
                         eval_data_all=eval_data_all, modulized_flag=modulized_flag)
 
@@ -139,8 +139,8 @@ if __name__ == '__main__':
     #Multiple model evaluation #
     ############################
     ### Call the "evaluate_different_dataset" function to evaluate all the models in the "models" folder, the multi_flag is to control whether evaulate across T or only do T=1 (if set to False), make sure you change the model name in function if you have any different model name 
-    evaluate_different_dataset(multi_flag=False, eval_data_all=False)
-    #evaluate_different_dataset(multi_flag=True, eval_data_all=False)
+    # evaluate_different_dataset(multi_flag=False, eval_data_all=False)
+    evaluate_different_dataset(multi_flag=True, eval_data_all=False)
 
     ###########
     # Predict #

@@ -51,7 +51,7 @@ def retrain_different_dataset(index):
     for eval_model in data_set_list:
         flags = load_flags(os.path.join("models", eval_model+"_best_model"))
         flags.model_name = "retrain" + str(index) + eval_model
-        flags.train_step = 500
+        flags.train_step = 1000
         flags.test_ratio = 0.2
         training_from_flag(flags)
 

@@ -408,14 +408,14 @@ class Network(object):
                 Ypred = self.model_f(Xpred).cpu().data.numpy()
                 np.savetxt(fyt, spectra.cpu().data.numpy())
                 np.savetxt(fxt, geometry.cpu().data.numpy())
-                if self.flags.data_set != 'Yang_sim':
-                    Ypred = simulator(self.flags.data_set, Xpred.cpu().data.numpy())
-                    np.savetxt(fyp, Ypred)
+                # if self.flags.data_set != 'Yang_sim':
+                #     Ypred = simulator(self.flags.data_set, Xpred.cpu().data.numpy())
+                #     np.savetxt(fyp, Ypred)
                 np.savetxt(fxp, Xpred.cpu().data.numpy())
         tk.record(1)
         return Ypred_file, Ytruth_file
 
-    def evaluate_multiple_time(self, time=200, save_dir='/home/sr365/MM_bench_multi_eval/Tandem/'):
+    def evaluate_multiple_time(self, time=200, save_dir='../mm_bench_multi_eval/Tandem/'):
         """
         Make evaluation multiple time for deeper comparison for stochastic algorithms
         :param save_dir: The directory to save the result

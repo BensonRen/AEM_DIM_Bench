@@ -244,7 +244,7 @@ class Network(object):
         return Ypred_file, Ytruth_file
     
 
-    def evaluate_multiple_time(self, time=200, save_dir='/home/sr365/mm_bench_multi_eval/VAE/'):
+    def evaluate_multiple_time(self, time=200, save_dir='../mm_bench_multi_eval/VAE/'):
         """
         Make evaluation multiple time for deeper comparison for stochastic algorithms
         :param save_dir: The directory to save the result

@@ -299,36 +299,7 @@ class Network(object):
                 np.savetxt(fyp, Ypred)
 
         return Ypred_file, Ytruth_file
-
-    def modulized_bp_ff(self, X_init_mat, Ytruth, FF, save_dir='data/', save_all=True):
-        """
-        The "evaluation" function for the modulized backprop and forward filtering. It takes the X_init_mat as the different initializations of the X values and do evaluate function on that instead of taking evaluation data from the data loader
-        :param X_init_mat: The input initialization of X positions, numpy array of shape (#init, #point, #xdim) usually (2048, 1000, xdim)
-        :param Yturth: The Ytruth numpy array of shape (#point, #ydim)
-        :param save_dir: The directory to save the results
-        :param FF(forward_filtering): The flag to control whether use forward filtering or not
-        """
-        self.load()                             # load the model as constructed
-        try:
-            bs = self.flags.backprop_step         # for previous code that did not incorporate this
-        except AttributeError:
-            print("There is no attribute backprop_step, catched error and adding this now")
-            self.flags.backprop_step = 300
-        cuda = True if torch.cuda.is_available() else False
-        if cuda:
-            self.model.cuda()
-        self.model.eval()
-        saved_model_str = self.saved_model.replace('/','_')
-
-        # Prepare Ytruth into tensor
-        Yt = self.build_tensor(Ytruth, requires_grad=False)
-        print("shape of Yt in modulized bp ff is:", Yt.size())
-        print("shape of the X_init_mat is:", np.shape(X_init_mat))
-        # Loop through #points
-        for ind in range(np.shape(X_init_mat)[1]):
-            Xpred, Ypred, loss = self.evaluate_one(Yt[ind,:], save_dir=save_dir, save_all=save_all, ind=ind, init_from_Xpred=X_init_mat[:,ind,:], FF=FF)
-        return None
-            
+        
 
     def evaluate(self, save_dir='data/', save_all=False, MSE_Simulator=False, save_misc=False, 
                     save_Simulator_Ypred=True, noise_level=0):
@@ -379,7 +350,7 @@ class Network(object):
                                                         save_Simulator_Ypred=save_Simulator_Ypred, 
                                                         noise_level=noise_level)
                 tk.record(ind)                          # Keep the time after each evaluation for backprop
-                self.plot_histogram(loss, ind)                                # Debugging purposes
+                # self.plot_histogram(loss, ind)                                # Debugging purposes
                 np.savetxt(fxt, geometry.cpu().data.numpy())
                 np.savetxt(fyt, spectra.cpu().data.numpy())
                 if 'Yang' not in self.flags.data_set:
@@ -417,15 +388,6 @@ class Network(object):
         
         # # Extra for early stopping
         loss_list = []
-        # end_lr = self.flags.lr / 8
-        # print(self.optm_eval)
-        # param_group_1 = self.optm_eval.param_groups[0]
-        # if self.flags.data_set == 'Chen':
-        #     stop_threshold = 1e-4
-        # elif self.flags.data_set == 'Peurifoy':
-        #     stop_threshold = 1e-3
-        # else:
-        #     stop_threshold = 1e-3
 
         # Begin NA
         begin = time.time()
@@ -476,12 +438,9 @@ class Network(object):
                 saved_model_str = self.saved_model.replace('/', '_') + 'inference' + str(ind)
             else:
                 saved_model_str = self.saved_model.replace('/', '_') + 'modulized_inference' + str(ind)
-            # Adding some random noise to the result
-            #print("Adding random noise to the output for increasing the diversity!!")
-            geometry_eval_input += torch.randn_like(geometry_eval_input) * noise_level
             
-            Ypred_file = os.path.join(save_dir, 'test_Ypred_point{}.csv'.format(saved_model_str))
-            Yfake_file = os.path.join(save_dir, 'test_Yfake_point{}.csv'.format(saved_model_str))
+            # Ypred_file = os.path.join(save_dir, 'test_Ypred_point{}.csv'.format(saved_model_str))
+            # Yfake_file = os.path.join(save_dir, 'test_Yfake_point{}.csv'.format(saved_model_str))
             Xpred_file = os.path.join(save_dir, 'test_Xpred_point{}.csv'.format(saved_model_str))
             #if 'Yang' not in self.flags.data_set:  # This is for meta-meterial dataset, since it does not have a simple simulator
             #    # 2 options: simulator/logit

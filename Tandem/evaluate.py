@@ -93,25 +93,24 @@ def evaluate_from_model(model_dir, multi_flag=False, eval_data_all=False, moduli
     else:
         pred_file, truth_file = ntwk.evaluate()
 
-    return
-     # Plot the MSE distribution
-    if flags.data_set != 'Yang_sim' and not multi_flag and not modulized_flag:  # meta-material does not have simulator, hence no Ypred given
-        MSE = plotMSELossDistrib(pred_file, truth_file, flags)
-        # Add this MSE back to the folder
-        flags.best_validation_loss = MSE
-        helper_functions.save_flags(flags, os.path.join("models", model_dir))
-    elif flags.data_set == 'Yang_sim' and not multi_flag and not modulized_flag:
-        # Save the current path for getting back in the future
-        cwd = os.getcwd()
-        abs_path_Xpred = os.path.abspath(pred_file.replace('Ypred','Xpred'))
-        # Change to NA dictory to do prediction
-        os.chdir('../NA/')
-        MSE = predict.ensemble_predict_master('../Data/Yang_sim/state_dicts/', 
-                                abs_path_Xpred, no_plot=False)
-        # Add this MSE back to the folder
-        flags.best_validation_loss = MSE
-        os.chdir(cwd)
-        helper_functions.save_flags(flags, os.path.join("models", model_dir))
+    #  # Plot the MSE distribution
+    # if flags.data_set != 'Yang_sim' and not multi_flag and not modulized_flag:  # meta-material does not have simulator, hence no Ypred given
+    #     MSE = plotMSELossDistrib(pred_file, truth_file, flags)
+    #     # Add this MSE back to the folder
+    #     flags.best_validation_loss = MSE
+    #     helper_functions.save_flags(flags, os.path.join("models", model_dir))
+    # elif flags.data_set == 'Yang_sim' and not multi_flag and not modulized_flag:
+    #     # Save the current path for getting back in the future
+    #     cwd = os.getcwd()
+    #     abs_path_Xpred = os.path.abspath(pred_file.replace('Ypred','Xpred'))
+    #     # Change to NA dictory to do prediction
+    #     os.chdir('../NA/')
+    #     MSE = predict.ensemble_predict_master('../Data/Yang_sim/state_dicts/', 
+    #                             abs_path_Xpred, no_plot=False)
+    #     # Add this MSE back to the folder
+    #     flags.best_validation_loss = MSE
+    #     os.chdir(cwd)
+    #     helper_functions.save_flags(flags, os.path.join("models", model_dir))
     print("Evaluation finished")
 
 
@@ -131,7 +130,7 @@ def evaluate_different_dataset(multi_flag=False, eval_data_all=False, modulized_
     This function is to evaluate all different datasets in the model with one function call
     """
     for model in os.listdir('models/'):
-        if 'best' in model and 'Peurifoy' in model:
+        if 'new_best' in model and 'Peu' in model:
             evaluate_from_model(model, multi_flag=multi_flag, 
                         eval_data_all=eval_data_all, modulized_flag=modulized_flag)
 
@@ -154,8 +153,8 @@ if __name__ == '__main__':
     #Multiple model evaluation #
     ############################
     ### Call the "evaluate_different_dataset" function to evaluate all the models in the "models" folder, the multi_flag is to control whether evaulate across T or only do T=1 (if set to False), make sure you change the model name in function if you have any different model name 
-    evaluate_different_dataset(multi_flag=False, eval_data_all=False)
-    #evaluate_different_dataset(multi_flag=True)
+    # evaluate_different_dataset(multi_flag=False, eval_data_all=False)
+    evaluate_different_dataset(multi_flag=True)
     #evaluate_all("models/MM")
 
     ###########

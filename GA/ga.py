@@ -101,11 +101,10 @@ class GA_manager(object):
                                                         save_Simulator_Ypred=save_Simulator_Ypred)
                 tk.record(ind)                          # Keep the time after each evaluation for backprop
                 # self.plot_histogram(loss, ind)                                # Debugging purposes
-                continue
                 np.savetxt(fxt, geometry.cpu().data.numpy())
                 np.savetxt(fyt, spectra.cpu().data.numpy())
-                if self.flags.data_set != 'Yang_sim':
-                    np.savetxt(fyp, Ypred)
+                # if self.flags.data_set != 'Yang_sim':
+                #     np.savetxt(fyp, Ypred)
                 np.savetxt(fxp, Xpred)
 
                 #if (ind+1)%self.flags.eval_step == 0:
@@ -160,10 +159,8 @@ class GA_manager(object):
 
         good_index = torch.argmin(loss,dim=0).cpu().data.numpy()
         geometry_eval_input = self.algorithm.old_gen.cpu().data.numpy()
-        return 0, 1, 2
         if save_all:  # If saving all the results together instead of the first one
             mse_loss = np.reshape(np.sum(np.square(logit.cpu().data.numpy() - target_spectra_expand.cpu().data.numpy()), axis=1), [-1, 1])
-            # The strategy of re-using the BPed result. Save two versions of file: one with FF and one without
             mse_loss = np.concatenate((mse_loss, np.reshape(np.arange(self.flags.eval_batch_size), [-1, 1])), axis=1)
             loss_sort = mse_loss[mse_loss[:, 0].argsort(kind='mergesort')]                         # Sort the loss list
             exclude_top = 0
@@ -177,14 +174,9 @@ class GA_manager(object):
             Ypred_file = os.path.join(save_dir, 'test_Ypred_point{}{}{}.csv'.format(saved_model_str,'inference',ind))
             Xpred_file = os.path.join(save_dir, 'test_Xpred_point{}{}{}.csv'.format(saved_model_str,'inference',ind))
             print("HERE:\t",Ypred_file)
-            if self.flags.data_set != 'Yang_sim':  # This is for meta-meterial dataset, since it does not have a simple simulator
-                Ypred = simulator(self.flags.data_set, geometry_eval_input[good_index, :])
-                with open(Xpred_file, 'a') as fxp, open(Ypred_file, 'a') as fyp:
-                    np.savetxt(fyp, Ypred)
-                    np.savetxt(fxp, geometry_eval_input[good_index, :])
-            else:
-                with open(Xpred_file, 'a') as fxp:
-                    np.savetxt(fxp, geometry_eval_input[good_index, :])
+            # Save the Xpred
+            with open(Xpred_file, 'a') as fxp:
+                np.savetxt(fxp, geometry_eval_input[good_index, :])
 
 
         ###################################
@@ -197,12 +189,12 @@ class GA_manager(object):
         best_estimate_index = np.argmin(MSE_list)
         # print("The best performing one is:", best_estimate_index)
         Xpred_best = np.reshape(np.copy(geometry_eval_input[best_estimate_index, :]), [1, -1])
-        if save_Simulator_Ypred and self.flags.data_set != 'Yang_sim':
-            begin = time.time()
-            Ypred = simulator(self.flags.data_set, geometry_eval_input)
-            print("Simulation: ", time.time()-begin)
-            if len(np.shape(Ypred)) == 1:  # If this is the ballistics dataset where it only has 1d y'
-                Ypred = np.reshape(Ypred, [-1, 1])
+        # if save_Simulator_Ypred and self.flags.data_set != 'Yang_sim':
+        #     begin = time.time()
+        #     Ypred = simulator(self.flags.data_set, geometry_eval_input)
+        #     print("Simulation: ", time.time()-begin)
+        #     if len(np.shape(Ypred)) == 1:  # If this is the ballistics dataset where it only has 1d y'
+        #         Ypred = np.reshape(Ypred, [-1, 1])
         Ypred_best = np.reshape(np.copy(Ypred[best_estimate_index, :]), [1, -1])
 
         return Xpred_best, Ypred_best, MSE_list
@@ -247,7 +239,7 @@ class GA(object):
             dim = 5
         elif self.data_set == 'Peurifoy':
             dim = 8
-        elif self.data_set == 'Yang_sim':
+        elif 'Yang' in  self.data_set:
             dim = 14
         else:
             sys.exit(

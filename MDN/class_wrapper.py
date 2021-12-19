@@ -252,9 +252,9 @@ class Network(object):
                 # This is for mdn tony
                 # Xpred = self.model.sample(spectra).detach().cpu().numpy()
                 # Saving the files down
-                #np.savetxt(fxt, geometry.cpu().data.numpy())
-                #np.savetxt(fyt, spectra.cpu().data.numpy())
-                #np.savetxt(fxp, Xpred)
+                np.savetxt(fxt, geometry.cpu().data.numpy())
+                np.savetxt(fyt, spectra.cpu().data.numpy())
+                np.savetxt(fxp, Xpred)
                 #if self.flags.data_set != 'Yang_sim' and 'Peurifoy' not in self.flags.data_set:
                 #   Ypred = simulator(self.flags.data_set, Xpred)
                 #   np.savetxt(fyp, Ypred)

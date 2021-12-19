@@ -3,6 +3,7 @@ Data/
 **.nohup
 **.zip
 */models/
+*multi_eval*
 **__
 **.sh
 */*.out

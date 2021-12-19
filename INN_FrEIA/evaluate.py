@@ -86,31 +86,29 @@ def evaluate_from_model(model_dir, multi_flag=False, eval_data_all=False, moduli
     print(pytorch_total_params)
     # Evaluation process
     print("Start eval now:")
-    if modulized_flag:
-        ntwk.evaluate_modulized_multi_time()
-    elif multi_flag:
+    if multi_flag:
         ntwk.evaluate_multiple_time()
     else:
         pred_file, truth_file = ntwk.evaluate()
         
-     # Plot the MSE distribution
-    if flags.data_set != 'Yang_sim' and not multi_flag and not modulized_flag:  # meta-material does not have simulator, hence no Ypred given
-        MSE = plotMSELossDistrib(pred_file, truth_file, flags)
-        # Add this MSE back to the folder
-        flags.best_validation_loss = MSE
-        helper_functions.save_flags(flags, os.path.join("models", model_dir))
-    elif flags.data_set == 'Yang_sim' and not multi_flag and not modulized_flag:
-        # Save the current path for getting back in the future
-        cwd = os.getcwd()
-        abs_path_Xpred = os.path.abspath(pred_file.replace('Ypred','Xpred'))
-        # Change to NA dictory to do prediction
-        os.chdir('../NA/')
-        MSE = predict.ensemble_predict_master('../Data/Yang_sim/state_dicts/', 
-                                abs_path_Xpred, no_plot=False)
-        # Add this MSE back to the folder
-        flags.best_validation_loss = MSE
-        os.chdir(cwd)
-        helper_functions.save_flags(flags, os.path.join("models", model_dir))
+    #  # Plot the MSE distribution
+    # if flags.data_set != 'Yang_sim' and not multi_flag and not modulized_flag:  # meta-material does not have simulator, hence no Ypred given
+    #     MSE = plotMSELossDistrib(pred_file, truth_file, flags)
+    #     # Add this MSE back to the folder
+    #     flags.best_validation_loss = MSE
+    #     helper_functions.save_flags(flags, os.path.join("models", model_dir))
+    # elif flags.data_set == 'Yang_sim' and not multi_flag and not modulized_flag:
+    #     # Save the current path for getting back in the future
+    #     cwd = os.getcwd()
+    #     abs_path_Xpred = os.path.abspath(pred_file.replace('Ypred','Xpred'))
+    #     # Change to NA dictory to do prediction
+    #     os.chdir('../NA/')
+    #     MSE = predict.ensemble_predict_master('../Data/Yang_sim/state_dicts/', 
+    #                             abs_path_Xpred, no_plot=False)
+    #     # Add this MSE back to the folder
+    #     flags.best_validation_loss = MSE
+    #     os.chdir(cwd)
+    #     helper_functions.save_flags(flags, os.path.join("models", model_dir))
     print("Evaluation finished")
    
 def evaluate_all(models_dir="models"):
@@ -134,7 +132,7 @@ def evaluate_different_dataset(multi_flag=False, eval_data_all=False, modulized_
     """
     ## Evaluate all models with "reatrain" and dataset name in models/
     for model in os.listdir('models/'):
-        if 'best' in model and 'Peurifoy' in model:
+        if 'new_best' in model:# and 'Peurifoy' in model:
             evaluate_from_model(model, multi_flag=multi_flag, 
                         eval_data_all=eval_data_all, modulized_flag=modulized_flag)
 

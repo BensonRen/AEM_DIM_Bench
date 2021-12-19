@@ -138,34 +138,10 @@ def evaluate_from_model(model_dir, multi_flag=False, eval_data_all=False, save_m
     # Evaluation process
     print("Start eval now:")
     if multi_flag:
-        #dest_dir = '/home/sr365/mm_bench_multi_eval_Chen_sweep/NA_init_lr_{}_decay_{}_batch_{}_bp_{}_noise_lvl_{}/'.format(init_lr, lr_decay, flags.eval_batch_size, flags.backprop_step, noise_level)
-        #dest_dir = '/home/sr365/mm_bench_compare_MDNA_loss/NA_init_lr_{}_decay_{}_MD_loss_{}'.format(flags.lr, flags.lr_decay_rate, flags.md_coeff)
-        #dest_dir = '/home/sr365/MM_bench_multi_eval/NA_RMSprop/'
-        #dest_dir = '/data/users/ben/multi_eval/NA_lr' + str(init_lr)  + 'bdy_' + str(BDY_strength)+'/' 
-        dest_dir = os.path.join('/home/sr365/MDNA_temp/', save_dir)
-        dest_dir = os.path.join(dest_dir, flags.data_set)
-        if not os.path.isdir(dest_dir):
-            os.makedirs(dest_dir)
-        #pred_file, truth_file = ntwk.evaluate(save_dir='/work/sr365/multi_eval/NA/' + flags.data_set, save_all=True,
-        pred_file, truth_file = ntwk.evaluate(save_dir=dest_dir, save_all=True,
-                                                save_misc=save_misc, MSE_Simulator=MSE_Simulator,
-                                                save_Simulator_Ypred=save_Simulator_Ypred,
-                                                noise_level=noise_level)
+        ntwk.evaluate_multiple_time()
     else:
-        # Creat the directory is not exist
-        if not os.path.isdir(save_dir):
-            os.makedirs(save_dir)
-        pred_file, truth_file = ntwk.evaluate(save_dir=save_dir, save_misc=save_misc,
-                                             MSE_Simulator=MSE_Simulator, 
-                                             save_Simulator_Ypred=save_Simulator_Ypred,
-                                             noise_level=noise_level)
-        #pred_file, truth_file = ntwk.evaluate(save_dir='data/'+flags.data_set,save_misc=save_misc, MSE_Simulator=MSE_Simulator, save_Simulator_Ypred=save_Simulator_Ypred)
-    if 'Yang' in flags.data_set:
-        return
-    # Plot the MSE distribution
-    MSE = plotMSELossDistrib(pred_file, truth_file, flags)
+        pred_file, truth_file = ntwk.evaluate()
     print("Evaluation finished")
-    return MSE
 
 
 def evaluate_all(models_dir="models"):
@@ -184,8 +160,7 @@ def evaluate_different_dataset(multi_flag, eval_data_all, save_Simulator_Ypred=F
     """
     ## Evaluate all models with "reatrain" and dataset name in models/
     for model in os.listdir('models/'):
-        if 'best' in model:# and 'Peurifoy' in model: 
-        #if 'best' in model and 'Chen' in model: 
+        if 'new_best' in model:# and 'Peurifoy' in model: 
             evaluate_from_model(model, multi_flag=multi_flag, 
                         eval_data_all=eval_data_all,save_Simulator_Ypred=save_Simulator_Ypred, MSE_Simulator=MSE_Simulator)
     
@@ -303,7 +278,7 @@ if __name__ == '__main__':
     # This is to run the single evaluation, please run this first to make sure the current model is well-trained before going to the multiple evaluation code below
     #evaluate_different_dataset(multi_flag=False, eval_data_all=False, save_Simulator_Ypred=True, MSE_Simulator=False)
     # This is for multi evaluation for generating the Fig 3, evaluating the models under various T values
-    #evaluate_different_dataset(multi_flag=True, eval_data_all=False, save_Simulator_Ypred=True, MSE_Simulator=False)
+    evaluate_different_dataset(multi_flag=True, eval_data_all=False, save_Simulator_Ypred=True, MSE_Simulator=False)
     
     # This is to test the BDY and LR effect of the NA method specially for Robo and Ballistics dataset, 2021.01.09 code trail for investigating why sometimes NA constrait the other methods
     #evaluate_trail_BDY_lr(multi_flag=True, eval_data_all=False, save_Simulator_Ypred=True, MSE_Simulator=False)
@@ -312,7 +287,7 @@ if __name__ == '__main__':
     #evaluate_all('models/Chen')
     
     #evaluate_from_model('models/Peurifoy_best_model')
-    evaluate_from_model('models/Yang_best_model')
+    #evaluate_from_model('models/Yang_best_model')
     #evaluate_from_model('models/Chen_best_model')
 
     #evaluate_from_model('models/Peurifoy_best_model')

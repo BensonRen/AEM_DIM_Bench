@@ -38,7 +38,7 @@ def evaluate_from_model(model_dir, multi_flag=False, eval_data_all=False, save_m
     print(model_dir)
     flags = load_flags(os.path.join("models", model_dir))
     flags.eval_model = model_dir  # Reset the eval mode
-    flags.generations = eval_flags.generations
+    # flags.generations = eval_flags.generations
     flags.test_ratio = get_test_ratio_helper(flags)
 
     if flags.data_set == 'Yang_sim':
@@ -61,7 +61,7 @@ def evaluate_from_model(model_dir, multi_flag=False, eval_data_all=False, save_m
     dname = flags.save_to
 
     if multi_flag:
-        dest_dir = './temp-dat/'+dname+'/'
+        dest_dir = '../mm_bench_multi_eval/GA/'
         if not os.path.isdir(dest_dir):
             os.makedirs(dest_dir)
         dest_dir += flags.data_set
@@ -157,16 +157,13 @@ def test_gen_pop():
 
                 evaluate_from_model(flags.eval_model, preset_flag=flags, save_Simulator_Ypred=True)
 
-def test_num_samples():
-    # ds = ['Yang_sim']#'Chen']#'Peurifoy']#,,]
-    # ds = ['Chen']#'Peurifoy']#,,
-    ds = ['Peurifoy']#,]
-    # gen = [50]
-    # saveto = ['GA2_50_gaussian']
-    gen = [300]
-    saveto = ['Test_time']
+def evaluate_different_dataset(multi_flag=True):
+    # ds = ['Yang']
+    # ds = ['Chen']
+    ds = ['Peurifoy']
     for i,dset in enumerate(ds):
-        dxy = dset + '_best_model'
+        # dxy = dset + '_best_model'
+        dxy = 'new_best_' + dset
         flags = load_flags(os.path.join("models", dxy))
         flags.data_set = dset
 
@@ -179,30 +176,30 @@ def test_num_samples():
         flags.mutation = 0.05
         flags.population = 2048
         flags.ga_eval = False
-        flags.generations = gen[i]
+        flags.generations = 300
         flags.xtra = 20
         flags.test_ratio = get_test_ratio_helper(flags)
         print('flags. test_ratio', flags.test_ratio)
-        flags.save_to = saveto[i]
+        flags.save_to = ds
+        # flags.save_to = saveto[i]
 
         # evaluate_from_model(flags.eval_model, preset_flag=flags, save_Simulator_Ypred=False, multi_flag=True)
-        evaluate_from_model(flags.eval_model, preset_flag=flags, save_Simulator_Ypred=False, multi_flag=True)
+        evaluate_from_model(flags.eval_model, preset_flag=flags, save_Simulator_Ypred=False, multi_flag=multi_flag)
 
 
 if __name__ == '__main__':
     # Read the flag, however only the flags.eval_model is used and others are not used
-    eval_flags = flag_reader.read_flag()
+    # eval_flags = flag_reader.read_flag()
 
-    test_num_samples()
     #test_categorical_variables()
 
     #####################
     # different dataset #
     #####################
     # This is to run the single evaluation, please run this first to make sure the current model is well-trained before going to the multiple evaluation code below
-    #evaluate_different_dataset(multi_flag=False, eval_data_all=False, save_Simulator_Ypred=False, MSE_Simulator=False)
+    #evaluate_different_dataset(multi_flag=False)
     # This is for multi evaluation for generating the Fig 3, evaluating the models under various T values
-    # evaluate_different_dataset(multi_flag=True, eval_data_all=False, save_Simulator_Ypred=True, MSE_Simulator=False)
+    evaluate_different_dataset(multi_flag=True)
 
     # This is to test the BDY and LR effect of the NA method specially for Robo and Ballistics dataset, 2021.01.09 code trail for investigating why sometimes NA constrait the other methods
     # evaluate_trail_BDY_lr(multi_flag=True, eval_data_all=False, save_Simulator_Ypred=True, MSE_Simulator=False)

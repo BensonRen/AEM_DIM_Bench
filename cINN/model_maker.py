@@ -45,7 +45,7 @@ def cINN(flags):
 # Subnet #
 ##########
 def subnet_fc(c_in, c_out):
-    if c_in == 256:
+    if c_in > 120 and c_in < 150:
         return nn.Sequential(nn.Linear(c_in, 160), nn.ReLU(), 
                                   nn.Linear(160, 160), nn.ReLU(),
                                   nn.Linear(160, 160), nn.ReLU(),

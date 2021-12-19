@@ -357,13 +357,13 @@ class Network(object):
                 np.savetxt(fxp, Xpred)
                 np.savetxt(fxt, x.cpu().data.numpy())
                 np.savetxt(fyt, y.cpu().data.numpy())
-                if self.flags.data_set != 'Yang_sim':          # Meta-material needs special handling due to no simulator
-                    Ypred = simulator(self.flags.data_set, Xpred)
-                    np.savetxt(fyp, Ypred)
+                # if self.flags.data_set != 'Yang_sim':          # Meta-material needs special handling due to no simulator
+                #     Ypred = simulator(self.flags.data_set, Xpred)
+                #     np.savetxt(fyp, Ypred)
             tk.record(1)
         return Ypred_file, Ytruth_file
 
-    def evaluate_multiple_time(self, time=200, save_dir='/home/sr365/mm_bench_multi_eval/INN/'):
+    def evaluate_multiple_time(self, time=200, save_dir='../mm_bench_multi_eval/INN/'):
         """
         Make evaluation multiple time for deeper comparison for stochastic algorithms
         :param save_dir: The directory to save the result
@@ -420,9 +420,9 @@ class Network(object):
         with open(Ytruth_file, 'a') as fyt, open(Ypred_file, 'a') as fyp, open(Xpred_file, 'a') as fxp:
             np.savetxt(fyt, Ytruth_tensor.cpu().data.numpy())
             np.savetxt(fxp, Xpred)
-            if self.flags.data_set != 'Yang_sim':
-                Ypred = simulator(self.flags.data_set, Xpred)
-                np.savetxt(fyp, Ypred)
+            # if self.flags.data_set != 'Yang_sim':
+            #     Ypred = simulator(self.flags.data_set, Xpred)
+            #     np.savetxt(fyp, Ypred)
         tk.record(1)
         return Ypred_file, Ytruth_file
         
