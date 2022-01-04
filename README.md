@@ -80,6 +80,8 @@ python train.py
 To ensure the model is evaluated and tested on completely unseen dataset, we need to generate a new test set. Simply save (rename) your current datasets and re-do the previous dataset generation with one line changed in each generation file.
 
 ```Comment_the_generation
+# ndata = 50000   # Training and validation set
+ndata = 1000    # Test set (half would be taken)
 ```
 
 ## Evaluation
@@ -89,40 +91,59 @@ To evaluate the models, for each of the algorithms, run this command:
 python evaluate.py
 ```
 
-> This would run the evaluation for all three datasets currently supported
+> This would run the evaluation for all three datasets currently supported and output the results in the folder 'mm_bench_multi_eval', the sub-level of this folder would be algorithm_name and sub-sub-level would be dataset name.
+
+Some house-keeping work to delete some useless file so that our simulator works, go to [utils/](./utils) and run:
 
 ```delete
 python delete.py
 ```
 
-Then, if you are using the meta-material dataset, run the predict.py for the meta-material dataset in the NA/ folder to get the Ypred files for meta-material.
+## Re-simulation
 
-You are almost there! Now you have all the evaluation results, to plot them go to utils/ folder and run
+Now the prediction and house-keeping is done, however, remember this is a inverse model so the models would only output the proposed geometry solutions. Since we are interested in the re-simulation error, these proposed solutions need to be re-simulated. Again, ADM has slightly different re-simulation path than the other two dataset since it uses neural simulator.
+
+For ADM dataset, go to [NA/predict.py](./NA/predict.py) and de-comment line (also comment the creat_mm_dataset())
+```
+method_list = ['Tandem','MDN','INN','cINN','VAE','GA','NA','NN']
+for method in method_list:
+    predict_ensemble_for_all('../Data/Yang_sim/state_dicts/', '../mm_bench_multi_eval/' + method + '/Yang_sim/', no_plot=True)  
+```
+For Stack and Shell dataset, go to [utils](./utils)
+```re-simulation
+chen_batch_predict.py
+peurifoy_batch_predict.py
+```
+
+
+## Plotting
 
 ```plot
 python plotsAnalysis.py
 ```
 
-to get the plot, which would be located in the multi_eval/ folder. We also provided the 25% 75% as a basic error bar for a visualization of the uncertainty of the methods.  
-
 > One thing to mention is that due to random initialization of weights, local minimums caused by the rough loss surface and stochastic nature of these algorithms, the plot generated is not going to be exactly like the one on the paper. However, with multiple training (mentioned above), the trend is very stable.
-> Also, after further experiment, we did managed to find better hyper-params for cINN in ballistics dataset and hence included the updated hyper-params in this repo.
-
 
 ## Results
 
 Our model achieves the following performance on :
+![Benchmarked results](./demo/Main_perf_and_example.png) 
 
-![Benchmarked results](./demo/result.png) 
+For the detailed example plots on the right panel, you can find the jupyter notebook in utils folder [paper_plot.ipynb](./utils/paper_plot.ipynb)
+
+For the umap plot showing the one-to-manyness of the individual datasets, you can find the jupyter notebook in Data folder[one_to_many.ipynb](./Data/one_to_many.ipynb)
+
+![One to manyness plot](./demo/One_to_many.png) 
 
 
 ## Contributing
 If you would like to contribute either method or dataset to this github repo, feel free to raise a issue or make a merge request.
 
 ## Credit
-We would like to express special thanks to [Visual Learning Lab Heidelberg](https://github.com/VLL-HD) who provided open sourced implementation of their Invertible network structure called Framework for Easily Invertible Architectures [(FrEIA)](https://github.com/VLL-HD/FrEIA) above. Their code base is undergoing non-backward-compatible updates. Therefore to simplify the process we have enclosed their v0.2 code that we used along with our code in this repo. We were inspired a lot from their work and grateful for the implementation of INNs. 
+For code of algorithms:
+1. INN & cINN: We would like to express special thanks to [Visual Learning Lab Heidelberg](https://github.com/VLL-HD) who provided open sourced implementation of their Invertible network structure called Framework for Easily Invertible Architectures [(FrEIA)](https://github.com/VLL-HD/FrEIA) above. Their code base is undergoing non-backward-compatible updates. Therefore to simplify the process we have enclosed their v0.2 code that we used along with our code in this repo. We were inspired a lot from their work and grateful for the implementation of INNs. 
 
-We would also like to express thanks to [Manu Joseph](https://github.com/manujosephv) who published the mixture density network (MDN) implementation that we were greatly inspired from. The implementation of our MDN is adapted from their [Pytorch tabular repo](https://github.com/manujosephv/pytorch_tabular).
+2. MDN: We would also like to express thanks to [Manu Joseph](https://github.com/manujosephv) who published the mixture density network (MDN) implementation that we were greatly inspired from. The implementation of our MDN is adapted from their [Pytorch tabular repo](https://github.com/manujosephv/pytorch_tabular).
 
 For code to generate metamaterial dataset:
 1. special thanks to github of [Peurifoy et al.](https://github.com/iguanaus/ScatterNet) from their paper [Nanophotonic particle simulation and inverse design using artificial neural networks](10.1126/sciadv.aar4206) for providing the Shell dataset 
