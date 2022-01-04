@@ -40,7 +40,7 @@ def predict_from_model(pre_trained_model, Xpred_file, no_plot=True, load_state_d
     
     flags = load_flags(pre_trained_model)                       # Get the pre-trained model
     flags.eval_model = pre_trained_model                    # Reset the eval mode
-    flags.test_ratio = 0.1              #useless number  
+    flags.test_ratio = 0.2              #useless number  
 
     # Get the data, this part is useless in prediction but just for simplicity
     #train_loader, test_loader = data_reader.read_data(flags)
@@ -200,10 +200,8 @@ if __name__ == '__main__':
     #creat_mm_dataset()
     #print('Time is spend on producing MM dataset is {}'.format(time.time()-start))
     
-   
     # multi evaluation 
-    method_list = ['MDN','INN','VAE','NN']
-    #method_list = ['Tandem','MDN','INN','cINN','VAE','GA','NA','NN']
+    method_list = ['Tandem','MDN','INN','cINN','VAE','GA','NA','NN']
     for method in method_list:
        predict_ensemble_for_all('../Data/Yang_sim/state_dicts/', '../mm_bench_multi_eval/' + method + '/Yang_sim/', no_plot=True)  
     

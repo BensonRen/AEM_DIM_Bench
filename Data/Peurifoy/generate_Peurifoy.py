@@ -212,11 +212,13 @@ if __name__ == '__main__':
     # # Normal bound
     start = time.time()
     num_cpu = 10
+    ndata = 50000   # Training and validation set
+    # ndata = 1000    # Test set (half would be taken)
     try: 
         pool = Pool(num_cpu)
         args_list = []
         for i in range(num_cpu):
-            args_list.append((i, 1000//num_cpu))
+            args_list.append((i, ndata//num_cpu))
         # print((args_list))
         # print(len(args_list))
         X_list = pool.starmap(generate_multi_processing, args_list)

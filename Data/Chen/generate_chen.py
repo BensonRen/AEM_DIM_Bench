@@ -591,7 +591,8 @@ if __name__ == '__main__':
     start = time.time()
     isTestLiteMORT = False
     isInverse = True
-    ndata = 5000
+    ndata = 50000   # Training and validation set
+    # ndata = 1000    # Test set (half would be taken)
 
     generate(ndata)
     print('The generation process of generating {} takes {}s'.format(ndata, time.time() - start))
