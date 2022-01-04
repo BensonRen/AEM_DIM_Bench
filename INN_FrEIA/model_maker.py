@@ -23,7 +23,7 @@ def INN(flags):
     :return: The INN network
     """
     
-    mid_layer = 512 if 'Chen' in flags.data_set else 1024
+    # mid_layer = 512 if 'Chen' in flags.data_set else 1024
     # Start from input layer
     nodes = [InputNode(flags.dim_tot, name='input')]
     # Recursively add the coupling layers and random permutation layer

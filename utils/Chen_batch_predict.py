@@ -6,7 +6,7 @@ import os
 import pandas as pd
 
 # This is the script for doing batch evaluation
-num_cpu = 32
+num_cpu = 40
 def eval_chen_for_file(filename):
     # Read the Xpred file
     Xpred = pd.read_csv(filename, sep=' ', header=None).values
@@ -50,10 +50,14 @@ def plot_MSE(folder):
 
 if __name__ == '__main__':
     # The folder to work 
-    folder = '/home/sr365/mm_bench_multi_eval/VAE/Chen'
-    #folder = '/home/sr365/MM_Bench/MDN_temp/data'
-    #folder = '/home/sr365/MM_Bench/MDN_temp/data_sigm_0.1'
-    # Run simulator for the whole folder
-    eval_whole_folder(folder)
-    
-    #plot_MSE(folder)
+    # folder_list = ['cINN']
+    folder_list = ['MDN','INN','VAE','NN']
+    #folder_list = ['VAE','Tandem','NN','NA','GA','INN','MDN']
+    for folders in folder_list:
+        folder = '../mm_bench_multi_eval/{}/Chen'.format(folders)
+        #folder = '/home/sr365/MM_Bench/MDN_temp/data'
+        #folder = '/home/sr365/MM_Bench/MDN_temp/data_sigm_0.1'
+        # Run simulator for the whole folder
+        eval_whole_folder(folder)
+        
+        #plot_MSE(folder)

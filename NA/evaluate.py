@@ -102,7 +102,7 @@ def evaluate_from_model(model_dir, multi_flag=False, eval_data_all=False, save_m
     flags.optim = 'Adam'
     ###############################################################################
     
-    print(flags)
+    # print(flags)
 
     # Get the data
     train_loader, test_loader = data_reader.read_data(flags, eval_data_all=eval_data_all)
@@ -114,8 +114,8 @@ def evaluate_from_model(model_dir, multi_flag=False, eval_data_all=False, save_m
     pytorch_total_params = sum(p.numel() for p in ntwk.model.parameters() if p.requires_grad)
     print(pytorch_total_params)
     # For calculating parameter 
-    # pred_file, truth_file = ntwk.validate_model(save_dir='data/' + flags.data_set+'_best_model', save_misc=save_misc,
-    #                                       MSE_Simulator=MSE_Simulator, save_Simulator_Ypred=save_Simulator_Ypred)
+    # pred_file, truth_file = ntwk.validate_model()
+    # return
 
     # Evaluation process
     print("Start eval now:")
@@ -169,7 +169,7 @@ def evaluate_different_dataset(multi_flag, eval_data_all, save_Simulator_Ypred=F
     """
     ## Evaluate all models with "reatrain" and dataset name in models/
     for model in os.listdir('models/'):
-        if 'best' in model and 'new' in model and 'Yang' in model: 
+        if 'best' in model and 'new' in model and 'Peurifoy' in model: 
             evaluate_from_model(model, multi_flag=multi_flag, 
                         eval_data_all=eval_data_all,save_Simulator_Ypred=save_Simulator_Ypred, MSE_Simulator=MSE_Simulator)
 
@@ -287,7 +287,8 @@ if __name__ == '__main__':
     #evaluate_trail_BDY_lr(multi_flag=True, eval_data_all=False, save_Simulator_Ypred=True, MSE_Simulator=False)
 
     #hyper_sweep_evaluation(multi_flag=True, eval_data_all=False, save_Simulator_Ypred=True, MSE_Simulator=False)
-    
+    #evaluate_from_model('models/retrain1Peurifoy/')
+    #evaluate_all('models/Peurifoy')
     ###########
     # Predict #
     ###########

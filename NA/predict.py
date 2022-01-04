@@ -197,57 +197,16 @@ def creat_mm_dataset():
 if __name__ == '__main__':
     # To create Meta-material dataset, use this line 
     #start = time.time()
-    creat_mm_dataset()
+    #creat_mm_dataset()
     #print('Time is spend on producing MM dataset is {}'.format(time.time()-start))
     
    
-    # Single evaluation in the data folder of each method
-    #method_list = ['MDN','INN_FrEIA','cINN','VAE']
-    #method_list = ['Tandem','MDN','INN_FrEIA','cINN','VAE']
-    #method_list = ['NA']
-    #for method in method_list:
-    #    predict_ensemble_for_all('../Data/Yang_sim/state_dicts/', '../' + method + '/data/', no_plot=False)  
+    # multi evaluation 
+    method_list = ['MDN','INN','VAE','NN']
+    #method_list = ['Tandem','MDN','INN','cINN','VAE','GA','NA','NN']
+    for method in method_list:
+       predict_ensemble_for_all('../Data/Yang_sim/state_dicts/', '../mm_bench_multi_eval/' + method + '/Yang_sim/', no_plot=True)  
     
     #predict_ensemble_for_all('../Data/Yang_sim/state_dicts/', '/home/sr365/MM_Bench/GA/temp-dat/GA1_chrome_gen_300/Yang_sim', no_plot=True)  
-    #predict_ensemble_for_all('../Data/Yang_sim/state_dicts/', '/home/sr365/MM_Bench/GA/temp-dat/GA1_chrome_gen_300_test_200/Yang_sim', no_plot=True)  
-    #predict_ensemble_for_all('../Data/Yang_sim/state_dicts/', '/home/sr365/MM_Bench/Tandem/data', no_plot=False)  
-    #predict_ensemble_for_all('../Data/Yang_sim/state_dicts/', '/home/sr365/MM_bench_multi_eval/NA_RMSprop/Yang_sim', no_plot=True)  
-    #predict_ensemble_for_all('../Data/Yang_sim/state_dicts/', '/home/sr365/MM_Bench/MDN_temp/data', no_plot=False)  
-    #predict_ensemble_for_all('../Data/Yang_sim/state_dicts/', '/home/sr365/mm_bench_multi_eval/VAE/Yang_sim', no_plot=True)  
-    #predict_ensemble_for_all('../Data/Yang_sim/state_dicts/', '/home/sr365/mm_bench_multi_eval/cINN/Yang_sim', no_plot=True)  
-    #predict_ensemble_for_all('../Data/Yang_sim/state_dicts/', '/home/sr365/mm_bench_multi_eval/MDN/Yang_sim', no_plot=True)  
-    """
-    #predict_ensemble_for_all('../Data/Yang_sim/state_dicts/', 'data/', no_plot=False)  
-    predict_ensemble_for_all('../Data/Yang_sim/state_dicts/', 'data_lr0.01/', no_plot=False)  
-    predict_ensemble_for_all('../Data/Yang_sim/state_dicts/', 'data_lr0.1/', no_plot=False)  
-    predict_ensemble_for_all('../Data/Yang_sim/state_dicts/', 'data_lr1/', no_plot=False)  
-    predict_ensemble_for_all('../Data/Yang_sim/state_dicts/', 'data_lr10/', no_plot=False)  
-    """
     
-    # Multi evaluation in the multi_eval folder of each method
-    # method_list_multi = ['NA_init_lr_0.01_decay_0.9_batch_2048']
-
-
-    #'NA_init_lr_0.05_decay_0.9_batch_2048']
-    #['NA_init_lr_0.0001_decay_0.9_batch_2048']
-    #'NA_init_lr_0.001_decay_0.9_batch_2048']
-    # #method_list_multi = ['MDN','INN','cINN','VAE']
-    # for method in method_list_multi:
-    #     predict_ensemble_for_all('../Data/Yang_sim/state_dicts/', '/home/sr365/mm_bench_multi_eval/NA_compare/'+ method + '/Yang_sim/', no_plot=True)  
-    
-    # This is for the modulized multi evaluation in the ICML_EXP folder
-    #method_list_multi = get_folder_modulized()
-    #for method in method_list_multi:
-    #    predict_ensemble_for_all('../Simulated_DataSets/Meta_material_Neural_Simulator/state_dicts/', os.path.join(method, 'meta_material/'), no_plot=True)  
-    
-    
-    #predict_from_model("models/Peurifoy_best_model", 'data/test_Xpred_Peurifoy_best_model.csv', no_plot=False, load_state_dict=None)
-    #predict_from_model("models/Chen_best_model", 'data/test_Xpred_Chen_best_model.csv', no_plot=False, load_state_dict=None)
-    #predict_from_model("models/Yang_best_model", 'data/test_Xpred_Yang_best_model.csv', no_plot=False, load_state_dict=None)
-
-
-    #predict_from_model('/home/sr365/MM_Bench/NA/models/Omar/Omarno_conv_5000_num_22_lr_0.0001reg_scale_0.001trail_0', '/home/sr365/MM_Bench/NA/data/Xpred.csv', no_plot=False, load_state_dict=None)
-
-
-
     #predict_from_model("models/Yang_sim_best_model", 'data/test_Xpred_Yang_best_model.csv', no_plot=False, load_state_dict=None)

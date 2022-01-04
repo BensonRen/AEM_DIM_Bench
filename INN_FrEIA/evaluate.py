@@ -132,7 +132,7 @@ def evaluate_different_dataset(multi_flag=False, eval_data_all=False, modulized_
     """
     ## Evaluate all models with "reatrain" and dataset name in models/
     for model in os.listdir('models/'):
-        if 'new_best' in model:# and 'Peurifoy' in model:
+        if 'new_best' in model and 'Peurifoy' in model:
             evaluate_from_model(model, multi_flag=multi_flag, 
                         eval_data_all=eval_data_all, modulized_flag=modulized_flag)
 

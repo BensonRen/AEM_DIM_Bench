@@ -45,13 +45,17 @@ def cINN(flags):
 # Subnet #
 ##########
 def subnet_fc(c_in, c_out):
-    if c_in > 120 and c_in < 150:
+    if c_in > 240 and c_in < 280:
+        print('INN Chen')
+        print('cin = ', c_in)
         return nn.Sequential(nn.Linear(c_in, 160), nn.ReLU(), 
                                   nn.Linear(160, 160), nn.ReLU(),
                                   nn.Linear(160, 160), nn.ReLU(),
                                   nn.Linear(160,  c_out))
     else:
         mid_layer = 1024
+        print('INN Peurifoy or Yang')
+        print('cin = ', c_in)
     return nn.Sequential(nn.Linear(c_in, mid_layer), nn.ReLU(), 
                         nn.Linear(mid_layer,mid_layer),nn.ReLU(),
                         nn.Linear(mid_layer,  c_out))

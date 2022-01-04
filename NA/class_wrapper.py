@@ -250,7 +250,7 @@ class Network(object):
         self.log.close()
         tk.record(1)                    # Record at the end of the training
 
-    def validate_model(self, save_dir='data/', save_all=False, MSE_Simulator=False, save_misc=False, save_Simulator_Ypred=True):
+    def validate_model(self, save_dir='data/'):
         """
         The function to evaluate how good the models is (outputs validation loss)
         Note that Ypred and Ytruth still refer to spectra, while Xpred and Xtruth still refer to geometries.
@@ -269,35 +269,31 @@ class Network(object):
         Ypred_file = os.path.join(save_dir, 'test_Ypred_{}.csv'.format(saved_model_str)) #Input associated? No real value
         Xtruth_file = os.path.join(save_dir, 'test_Xtruth_{}.csv'.format(saved_model_str)) #Output to compare against
         Ytruth_file = os.path.join(save_dir, 'test_Ytruth_{}.csv'.format(saved_model_str)) #Input of Neural Net
-        Xpred_file = os.path.join(save_dir, 'test_Xpred_{}.csv'.format(saved_model_str)) #Output of Neural Net
         print("evalution output pattern:", Ypred_file)
 
         # Time keeping
-        tk = time_keeper(time_keeping_file=os.path.join(save_dir, 'evaluation_time.txt'))
-
+        # tk = time_keeper(time_keeping_file=os.path.join(save_dir, 'evaluation_time.txt'))
+        MSE_List = []
         # Open those files to append
-        with open(Xtruth_file, 'w') as fxt,open(Ytruth_file, 'w') as fyt, open(Ypred_file, 'w') as fyp:
+        with open(Xtruth_file, 'a') as fxt,open(Ytruth_file, 'a') as fyt, open(Ypred_file, 'a') as fyp:
 
             # Loop through the eval data and evaluate
-            geometry, spectra = next(iter(self.test_loader))
+            for ind, (geometry, spectra) in enumerate(self.test_loader):
 
-            if cuda:
-                geometry = geometry.cuda()
-                spectra = spectra.cuda()
+                if cuda:
+                    geometry = geometry.cuda()
+                    spectra = spectra.cuda()
 
-            # Initialize the geometry first
-            Ypred = self.model(geometry).cpu().data.numpy()
-            Ytruth = spectra.cpu().data.numpy()
+                # Initialize the geometry first
+                Ypred = self.model(geometry).cpu().data.numpy()
+                Ytruth = spectra.cpu().data.numpy()
 
-            MSE_List = np.mean(np.power(Ypred - Ytruth, 2), axis=1)
-            mse = np.mean(MSE_List)
-            print(mse)
-
-            np.savetxt(fxt, geometry.cpu().data.numpy())
-            np.savetxt(fyt, Ytruth)
-            if self.flags.data_set != 'Yang':
+                MSE_List.extend(np.mean(np.power(Ypred - Ytruth, 2), axis=1))
+                np.savetxt(fxt, geometry.cpu().data.numpy())
+                np.savetxt(fyt, Ytruth)
                 np.savetxt(fyp, Ypred)
-
+        mse = np.mean(MSE_List)
+        print('lenght of mse list is {}, average mse = {}'.format(len(MSE_List), mse))
         return Ypred_file, Ytruth_file
         
 
@@ -636,4 +632,44 @@ class Network(object):
                     Ypred = simulator(self.flags.data_set, Xpred)
                     np.savetxt(fyp, Ypred)
                 tk.record(1)
+        return Ypred_file, Ytruth_file
+    
+    def evaluate_forward(self, save_dir='data/'):
+        """
+        The function to evaluate how good the Neural Adjoint is and output results
+        :param save_dir: The directory to save the results
+        (This is useful as it gives us the true Ypred instead of the Ypred that the network "thinks" it gets, which is
+        usually inaccurate due to forward model error)
+        :return:
+        """
+        self.load()                             # load the model as constructed
+        cuda = True if torch.cuda.is_available() else False
+        if cuda:
+            self.model.cuda()
+        self.model.eval()
+        saved_model_str = self.saved_model.replace('/','_')
+        # Get the file names
+        Ypred_file = os.path.join(save_dir, 'test_Ypred_{}.csv'.format(saved_model_str))
+        Xtruth_file = os.path.join(save_dir, 'test_Xtruth_{}.csv'.format(saved_model_str))
+        Ytruth_file = os.path.join(save_dir, 'test_Ytruth_{}.csv'.format(saved_model_str))
+        print("evalution output pattern:", Ypred_file)
+
+        # Time keeping
+        tk = time_keeper(time_keeping_file=os.path.join(save_dir, 'evaluation_time.txt'))
+
+        # Open those files to append
+        with open(Xtruth_file, 'a') as fxt,open(Ytruth_file, 'a') as fyt, open(Ypred_file, 'a') as fyp:
+            # Loop through the eval data and evaluate
+            for ind, (geometry, spectra) in enumerate(self.test_loader):
+                if cuda:
+                    geometry = geometry.cuda()
+                    spectra = spectra.cuda()
+                # Initialize the geometry first
+                Ypred = self.model(geometry)
+                tk.record(ind)                          # Keep the time after each evaluation for backprop
+                # self.plot_histogram(loss, ind)                                # Debugging purposes
+                np.savetxt(fxt, geometry.cpu().data.numpy())
+                np.savetxt(fyt, spectra.cpu().data.numpy())
+                np.savetxt(fyp, Ypred.cpu().data.numpy())
+
         return Ypred_file, Ytruth_file

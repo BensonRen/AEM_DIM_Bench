@@ -47,8 +47,8 @@ def retrain_different_dataset(index):
     This function is to evaluate all different datasets in the model with one function call
     """
     from utils.helper_functions import load_flags
-    # data_set_list = ["Peurifoy"]
-    data_set_list = ["Chen"]
+    data_set_list = ["Peurifoy"]
+    # data_set_list = ["Chen"]
     # data_set_list = ["Yang"]
     #data_set_list = ["Peurifoy","Chen","Yang_sim"]
     for eval_model in data_set_list:
@@ -116,5 +116,5 @@ if __name__ == '__main__':
     #retrain_different_dataset(0)
 
     # Do the retraining for all the data set to get the training for reproducibility
-    for i in range(10):
+    for i in range(5):
        retrain_different_dataset(i)

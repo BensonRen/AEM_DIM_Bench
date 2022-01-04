@@ -533,9 +533,9 @@ def get_mse_mat_from_folder(data_dir):
                     num_trails = len(Yp)
                     Ypred_mat = np.zeros([l, num_trails, w])
                     update_Ypred_mat = True
-                number_str = files.split('inference')[-1][:-4]
+                number_str = files[:-4].split('inference')[-1]
                 print(number_str)
-                number = int(files.split('inference')[-1][:-4])
+                number = int(files[:-4].split('inference')[-1])
                 Ypred_mat[number, :, :] = Yp
                 check_full[number] = 1
         assert np.sum(check_full) == l, 'Your list is not complete, {} Ypred files out of {} are present'.format(np.sum(check_full), l)
@@ -566,42 +566,10 @@ def get_mse_mat_from_folder(data_dir):
         # For special case yp = -999, it is out of numerical simulator
         print("shape of np :", np.shape(yp))
         print("shape of Yt :", np.shape(Yt))
-        if np.shape(yp)[1] == 1:                        # If this is ballistics (actually sinewave also is 1d)
-            print("this is ballistics dataset, checking the -999 situation now")
-            valid_index = yp[:, 0] != -999
-            invalid_index = yp[:, 0] == -999
-            #valid_index = np.arange(len(yp[:, 0]))[valid_index]
-            #invalid_index = np.arange(len(yp[:, 0]))[not valid_index]
-            print("shape of valid flag :", np.shape(valid_index))
-            mse = np.mean(np.square(yp - Yt), axis=1)
-            mse_mat[ind, valid_index] = mse[valid_index]
-            mse_mat[ind, invalid_index] = -999 
-            #valid_num = np.sum(valid_index)
-            #yp = yp[valid_index, :]
-            #Yt_valid = Yt[valid_index, :]
-            #print("shape of np after valid :", np.shape(yp))
-            #print("shape of Yt after valid :", np.shape(Yt_valid))
-            #mse = np.mean(np.square(yp - Yt_valid), axis=1)
-            #if valid_num == len(valid_index):
-            #    mse_mat[ind, :] = mse
-            #else:
-            #    mse_mat[ind, :valid_num] = mse
-            #    mse_mat[ind, valid_num:] = np.mean(mse)
-        else:
-            mse = np.mean(np.square(yp - Yt), axis=1)
-            mse_mat[ind, :] = mse
+        mse = np.nanmean(np.square(yp - Yt), axis=1)
+        mse_mat[ind, :] = mse
     print("shape of the yp is", np.shape(yp)) 
     print("shape of mse is", np.shape(mse))
-    # Extra step to work with -999 case for ballistics
-    if np.shape(yp)[1] == 1:
-        print("Processing the ballistics data due to -999")
-        for i in range(len(Yt)):
-            # Get that list
-            mse_list = mse_mat[:, i]
-            # change ones with -999 to mean of others
-            valid_list = mse_list != -999
-            invalid_list = mse_list == -999
-            mse_mat[invalid_list, i] = np.mean(mse_list[valid_list])
 
 
     return mse_mat, Ypred_list
@@ -644,16 +612,13 @@ def MeanAvgnMinMSEvsTry(data_dir):
         mse_avg_list = np.zeros([len(Ypred_list),])
         mse_std_list = np.zeros([len(Ypred_list),])
         mse_quan2575_list = np.zeros([2, len(Ypred_list)])
-        if 'NA' or 'GA' in data_dir:            
-            cut_front = 0
-        else:
-            cut_front = 0
+        cut_front = 0
         for i in range(len(Ypred_list)-cut_front):
-            mse_avg_list[i] = np.mean(mse_mat[cut_front:i+1+cut_front, :])
-            mse_min_list[i] = np.mean(np.min(mse_mat[cut_front:i+1+cut_front, :], axis=0))
-            mse_std_list[i] = np.std(np.min(mse_mat[cut_front:i+1+cut_front, :], axis=0))
-            mse_quan2575_list[0, i] = np.percentile(np.min(mse_mat[cut_front:i+1+cut_front, :], axis=0), 25)
-            mse_quan2575_list[1, i] = np.percentile(np.min(mse_mat[cut_front:i+1+cut_front, :], axis=0), 75)
+            mse_avg_list[i] = np.nanmean(mse_mat[cut_front:i+1+cut_front, :])
+            mse_min_list[i] = np.nanmean(np.min(mse_mat[cut_front:i+1+cut_front, :], axis=0))
+            mse_std_list[i] = np.nanstd(np.min(mse_mat[cut_front:i+1+cut_front, :], axis=0))
+            mse_quan2575_list[0, i] = np.nanpercentile(np.min(mse_mat[cut_front:i+1+cut_front, :], axis=0), 25)
+            mse_quan2575_list[1, i] = np.nanpercentile(np.min(mse_mat[cut_front:i+1+cut_front, :], axis=0), 75)
 
     # Save the list down for further analysis
     np.savetxt(os.path.join(data_dir, 'mse_mat.csv'), mse_mat, delimiter=' ')
@@ -1008,10 +973,10 @@ if __name__ == '__main__':
     #DrawAggregateMeanAvgnMSEPlot('/work/sr365/NA_compare/', 'ballistics')
         
 
-    work_dir = '/home/sr365/mm_bench_multi_eval'
+    work_dir = '../mm_bench_multi_eval/'
     #work_dir = '/home/sr365/MM_Bench/GA/temp-dat'
-    #datasets = ['Yang_sim']
-    datasets = ['Yang_sim','Chen','Peurifoy']
+    datasets = ['Peurifoy']
+    #datasets = ['Yang_sim','Chen','Peurifoy']
     MeanAvgnMinMSEvsTry_all(work_dir)
     for dataset in datasets:
         #DrawAggregateMeanAvgnMSEPlot(work_dir, dataset, resolution=5)

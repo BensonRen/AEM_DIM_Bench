@@ -160,7 +160,7 @@ def evaluate_different_dataset(multi_flag, eval_data_all, save_Simulator_Ypred=F
     """
     ## Evaluate all models with "reatrain" and dataset name in models/
     for model in os.listdir('models/'):
-        if 'new_best' in model:# and 'Peurifoy' in model: 
+        if 'new_best' in model and 'Peurifoy' in model: 
             evaluate_from_model(model, multi_flag=multi_flag, 
                         eval_data_all=eval_data_all,save_Simulator_Ypred=save_Simulator_Ypred, MSE_Simulator=MSE_Simulator)
     
@@ -276,15 +276,15 @@ if __name__ == '__main__':
     # different dataset #
     #####################
     # This is to run the single evaluation, please run this first to make sure the current model is well-trained before going to the multiple evaluation code below
-    #evaluate_different_dataset(multi_flag=False, eval_data_all=False, save_Simulator_Ypred=True, MSE_Simulator=False)
+    evaluate_different_dataset(multi_flag=False, eval_data_all=False, save_Simulator_Ypred=True, MSE_Simulator=False)
     # This is for multi evaluation for generating the Fig 3, evaluating the models under various T values
-    evaluate_different_dataset(multi_flag=True, eval_data_all=False, save_Simulator_Ypred=True, MSE_Simulator=False)
+    #evaluate_different_dataset(multi_flag=True, eval_data_all=False, save_Simulator_Ypred=True, MSE_Simulator=False)
     
     # This is to test the BDY and LR effect of the NA method specially for Robo and Ballistics dataset, 2021.01.09 code trail for investigating why sometimes NA constrait the other methods
     #evaluate_trail_BDY_lr(multi_flag=True, eval_data_all=False, save_Simulator_Ypred=True, MSE_Simulator=False)
 
     #hyper_sweep_evaluation(multi_flag=True, eval_data_all=False, save_Simulator_Ypred=True, MSE_Simulator=False)
-    #evaluate_all('models/Chen')
+    #evaluate_all('models/Peurifoy')
     
     #evaluate_from_model('models/Peurifoy_best_model')
     #evaluate_from_model('models/Yang_best_model')

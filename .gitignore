@@ -4,6 +4,7 @@ Data/
 **.zip
 */models/
 *multi_eval*
+*temp.ipynb
 **__
 **.sh
 */*.out

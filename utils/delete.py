@@ -12,7 +12,7 @@ import numpy
 ###############
 #input_dir = '/home/sr365/MM_Bench/GA/temp-dat'
 #input_dir = '/home/sr365/mm_bench_multi_eval_Chen_sweep/'
-input_dir =  '/home/sr365/mm_bench_multi_eval'   # quad
+input_dir =  '../mm_bench_multi_eval'   # quad
 #input_dir =  '/home/sr365/MM_bench_multi_eval'   # quad
 #input_dir = '/home/sr365/ICML_exp_cINN_ball/'    # For quad
 #input_dir =  '/home/sr365/ICML_exp/'   # quad

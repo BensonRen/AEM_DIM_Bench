@@ -18,23 +18,22 @@ def get_test_ratio_helper(flags):
     """
     if flags.data_set == 'Chen':
         # return 0.02                       # 1000 in total
-        return 0.004                       # 200 in total
+        #return 0.01                       # 500 in total
         # return 0.0004                       # 20 in total
         #return 0.25
-        #return 0.039                        # 500 in total
+        return 0.1                        # 500 in total out of 5k
     elif flags.data_set == 'Peurifoy':
         # return 0.02                       # 1000 in total
-        return 0.004                       # 200 in total
+        #return 0.01                       # 500 in total
         # return 0.0004                       # 20 in total
         #@return 0.0125                        # 100 in total
         #return 0.0125                        # 100 in total
         #return 0.25
-        #return 0.1
+        return 0.5
         #return 0.0625                        # 500 in total
     elif 'Yang' in flags.data_set:
         # return 0.1                             # 1000 in total
-        return 0.02                       # 200 in total
-        # return 0.002                       # 20 in total
+        return 0.05                       # 500 in total
         #return 0.25                        # 10000 in total for Meta material
     else:
         print("Your dataset is none of the artificial datasets")

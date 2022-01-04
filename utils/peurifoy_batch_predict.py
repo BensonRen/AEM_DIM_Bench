@@ -6,7 +6,7 @@ import os
 import pandas as pd
 
 # This is the script for doing batch evaluation
-num_cpu = 48
+num_cpu = 5
 def eval_peurifoy_for_file(filename):
     # Read the Xpred file
     Xpred = pd.read_csv(filename, sep=' ', header=None).values
@@ -49,11 +49,19 @@ def plot_MSE(folder):
         plotMSELossDistrib(Ypred_file, Ytruth_file, save_dir=save_dir)
 
 if __name__ == '__main__':
-    # The folder to work 
-    folder = '/home/sr365/mm_bench_multi_eval/NA/Peurifoy'
-    #folder = '/home/sr365/MM_Bench/MDN_temp/data'
-    #folder = '/home/sr365/MM_Bench/MDN_temp/data_sigm_0.1'
-    # Run simulator for the whole folder
-    eval_whole_folder(folder)
-    
-    #plot_MSE(folder)
+    # Tandem and inverse only need to do the evaluation once
+    eval_whole_folder('../inverse/data')
+    plot_MSE('../inverse/data')
+    eval_whole_folder('../Tandem/data')
+    plot_MSE('../Tandem/data')
+    quit()
+    # For the multi_T evaluation
+    # folder_list = ['VAE','Tandem','NN','NA','GA','INN','MDN','cINN']
+    folder_list = ['GA','NA']
+    # folder_list = ['MDN','INN','VAE','cINN']
+    for folders in folder_list:
+        folder = '../mm_bench_multi_eval/{}/Peurifoy'.format(folders)
+        # Run simulator for the whole folder
+        eval_whole_folder(folder)
+        
+        #plot_MSE(folder)
