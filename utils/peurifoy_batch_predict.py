@@ -56,8 +56,8 @@ if __name__ == '__main__':
     #plot_MSE('../Tandem/data')
     #quit()
     # For the multi_T evaluation
-    # folder_list = ['VAE','Tandem','NN','NA','GA','INN','MDN','cINN']
-    folder_list = ['NA']
+    folder_list = ['VAE','Tandem','NN','NA','GA','INN','MDN','cINN']
+    #folder_list = ['GA']
     # folder_list = ['MDN','INN','VAE','cINN']
     for folders in folder_list:
         folder = '../mm_bench_multi_eval/{}/Peurifoy'.format(folders)

@@ -51,12 +51,10 @@ def plot_MSE(folder):
 if __name__ == '__main__':
     # The folder to work 
     # folder_list = ['cINN']
-    folder_list = ['MDN','INN','VAE','NN']
-    #folder_list = ['VAE','Tandem','NN','NA','GA','INN','MDN']
+    #folder_list = ['MDN','INN','VAE','NN']
+    folder_list = ['VAE','Tandem','NN','NA','GA','INN','MDN','cINN']
     for folders in folder_list:
         folder = '../mm_bench_multi_eval/{}/Chen'.format(folders)
-        #folder = '/home/sr365/MM_Bench/MDN_temp/data'
-        #folder = '/home/sr365/MM_Bench/MDN_temp/data_sigm_0.1'
         # Run simulator for the whole folder
         eval_whole_folder(folder)
         
