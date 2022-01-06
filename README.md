@@ -27,10 +27,30 @@ Individual steps are illustrated below. This is laying the roadmap of how you ca
 
 ### Generating benchmarking datasets
 
+The schematic of the structure of the datasets are shown below: 
+
+![Material_schematic](./demo/material_schematics.png) 
+
 The code to generate the benchmarking dataset can be found in [Data](./Data)
  
-#### ADM dataset (a.k.a. Yang_sim / Yang / Deng dataset)
-First go to [Data/Yang_sim](./Data/Yang_sim) and run the random generation of the geometry variable
+#### (a) Shell dataset (a.k.a. Peurifoy dataset)
+Go to [Data/Peurifoy](./Data/Peurifoy) and run the script to generate dataset
+```Generate_Peurifoy
+generate_Peurifoy.py
+``` 
+
+> Note that the Shell dataset does not use Pytorch but use multiprocessing to accelerate the process. One can change the number of cores to be used by changing 'num_cpu' parameter in '__main__' function of the two scripts.
+
+#### (b) Stack dataset (a.k.a. Chen dataset)
+Go to [Data/Chen](./Data/Chen) and run the script to generate dataset
+```Generate_chen
+generate_chen.py
+``` 
+
+#### (c) ADM dataset (a.k.a. Yang_sim / Yang / Deng dataset)
+This is a neural simulator that requires a set of neural network weights and model definition files to generate the spectra from random geometry. First download the model weights from [this figshare link.](https://doi.org/10.6084/m9.figshare.17949758.v1) and unzip it under the folder [Data/Yang_sim](./Data/Yang_sim). (so that now there are two folders "sate_dicts", "model_param" and one .py file "generate_mm_x.py" under this folder level)
+
+Then at the same folder level [Data/Yang_sim](./Data/Yang_sim) and run the random generation of the geometry variable
 ```Generate_geometry_ADM
 generate_mm_x.py
 ```
@@ -40,20 +60,6 @@ Then, to get the spectra response of the generated geometries, go to [NA/](./NA/
 python predict.py  (Make sure you have the one line says creat_mm_dataset activated in this file)
 ```
 > Note that this would require a GPU version of Pytorch since the neural simulator is very slow without a GPU and therefore not supported currently to run on pure CPU configuration
-
-#### Stack dataset (a.k.a. Chen dataset)
-Go to [Data/Chen](./Data/Chen) and run the script to generate dataset
-```Generate_chen
-generate_chen.py
-``` 
-
-#### Shell dataset (a.k.a. Peurifoy dataset)
-Go to [Data/Peurifoy](./Data/Peurifoy) and run the script to generate dataset
-```Generate_Peurifoy
-generate_Peurifoy.py
-``` 
-
-> Note that the Shell dataset does not use Pytorch but use multiprocessing to accelerate the process. One can change the number of cores to be used by changing 'num_cpu' parameter in '__main__' function of the two scripts.
 
 ## Training
 
@@ -134,6 +140,11 @@ For the detailed example plots on the right panel, you can find the jupyter note
 For the umap plot showing the one-to-manyness of the individual datasets, you can find the jupyter notebook in Data folder[one_to_many.ipynb](./Data/one_to_many.ipynb)
 
 ![One to manyness plot](./demo/One_to_many.png) 
+
+### In case one would like to explore the predicted result 
+> The file structure of the evaluation at "mm_bench_multi_eval" would be: for each of the algorithm-dataset pair, for all inverse algorithms other than NA and GA: 200 geometry prediction files (with name test_Xpred_new_best_{}inference{}.csv), 200 re-simulated spectra files (with name test_Ypred_new_best_{}inference{}.csv) each have 500 predictions to the 500 differen target spectra. Also the ground truth would be Xtruth.csv and Ytruth.csv.
+
+> For GA and NA, due to implementation issue, they are slightly different. Instead of 200 files each containing 500 different target spectra, GA and NA has 500 files, each corresponding to the same target spectra. (It is like flipping the row and column of a giant prediction matrix.). Therefore, there would be 500 geometry prediction file (with name test_Xpred_pointnew_best_{}inference{}.csv) and 500 re-simulated spectral file. Grouth truth setting is the as above.
 
 
 ## Contributing

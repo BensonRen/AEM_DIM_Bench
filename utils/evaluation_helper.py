@@ -17,24 +17,12 @@ def get_test_ratio_helper(flags):
     This is for easier changing for multi_eval
     """
     if flags.data_set == 'Chen':
-        # return 0.02                       # 1000 in total
-        #return 0.01                       # 500 in total
-        # return 0.0004                       # 20 in total
-        #return 0.25
-        return 0.1                        # 500 in total out of 5k
+        return 0.5                        # 500 in total out of 5k
     elif flags.data_set == 'Peurifoy':
-        # return 0.02                       # 1000 in total
-        #return 0.01                       # 500 in total
-        # return 0.0004                       # 20 in total
-        #@return 0.0125                        # 100 in total
-        #return 0.0125                        # 100 in total
-        #return 0.25
         return 0.5
         #return 0.0625                        # 500 in total
     elif 'Yang' in flags.data_set:
-        # return 0.1                             # 1000 in total
-        return 0.05                       # 500 in total
-        #return 0.25                        # 10000 in total for Meta material
+        return 0.5                       # 500 in total
     else:
         print("Your dataset is none of the artificial datasets")
         return None
@@ -62,18 +50,7 @@ def compare_truth_pred(pred_file, truth_file, cut_off_outlier_thres=None, quiet_
         print('In the compare_truth_pred function, your input pred and truth is neither a file nor a numpy array')
     if not quiet_mode:
         print("in compare truth pred function in eval_help package, your shape of pred file is", np.shape(pred))
-    if len(np.shape(pred)) == 1:
-        # Due to Ballistics dataset gives some non-real results (labelled -999)
-        valid_index = pred != -999
-        if (np.sum(valid_index) != len(valid_index)) and not quiet_mode:
-            print("Your dataset should be ballistics and there are non-valid points in your prediction!")
-            print('number of non-valid points is {}'.format(len(valid_index) - np.sum(valid_index)))
-        pred = pred[valid_index]
-        truth = truth[valid_index]
-        # This is for the edge case of ballistic, where y value is 1 dimensional which cause dimension problem
-        pred = np.reshape(pred, [-1,1])
-        truth = np.reshape(truth, [-1,1])
-
+    
     mae = np.mean(np.abs(pred-truth), axis=1)
     mse = np.mean(np.square(pred-truth), axis=1)
 
