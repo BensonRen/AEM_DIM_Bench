@@ -8,7 +8,7 @@ This repository is the implementation of [Inverse deep learning methods and benc
 The detailed conda environment is packaged in [.yml file](./demo/environment.yml).
 
 ### Flow chart process
-Individual steps are illustrated below. This is laying the roadmap of how you can recreate the result in our paper. The blue fineprint above each step is the functions you should run and please check the detailed illustration below before you run it. 
+Individual steps are illustrated below. This is laying the roadmap of how you can recreate the result in our paper. 
 ![Flow_chart](./demo/flow_chart.png) 
 
 ### Folder names
@@ -150,7 +150,7 @@ For the umap plot showing the one-to-manyness of the individual datasets, you ca
 ## Contributing
 If you would like to contribute either method or dataset to this github repo, feel free to raise a issue or make a merge request.
 
-## Credit
+## Thanks
 For code of algorithms:
 1. INN & cINN: We would like to express special thanks to [Visual Learning Lab Heidelberg](https://github.com/VLL-HD) who provided open sourced implementation of their Invertible network structure called Framework for Easily Invertible Architectures [(FrEIA)](https://github.com/VLL-HD/FrEIA) above. Their code base is undergoing non-backward-compatible updates. Therefore to simplify the process we have enclosed their v0.2 code that we used along with our code in this repo. We were inspired a lot from their work and grateful for the implementation of INNs. 
 
@@ -160,6 +160,8 @@ For code to generate metamaterial dataset:
 1. special thanks to github of [Peurifoy et al.](https://github.com/iguanaus/ScatterNet) from their paper [Nanophotonic particle simulation and inverse design using artificial neural networks](10.1126/sciadv.aar4206) for providing the Shell dataset 
 2. special thanks to github of [Chen et al.](https://github.com/closest-git/MetaLab) from their paper [Smart inverse design of graphene-based photonic metamaterials by an adaptive artificial neural network](10.1039/c9nr01315f) for providing the Stack dataset.
 3. special thanks to github of [Ren et al.](https://github.com/BensonRen/BDIMNNA) from their paper [Benchmarking deep inverse models over time, and the neural-adjoint method](https://proceedings.neurips.cc/paper/2020/hash/007ff380ee5ac49ffc34442f5c2a2b86-Abstract.html) for providing the ADM dataset
+## Funding
+We acknowledge funding from the Department of Energy under U.S. Department of Energy (DOE) (DESC0014372).
 
 ## License
 
