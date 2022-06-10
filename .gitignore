@@ -14,7 +14,7 @@ Data/Yang_sim/state_dicts/*.png
 **.png
 **.out
 **.err
-*/data*
+*/data/
 *results*
 **.pt
 **event

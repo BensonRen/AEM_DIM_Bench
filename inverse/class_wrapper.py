@@ -79,6 +79,30 @@ class Network(object):
         # summary(model, input_size=(128, 8))
         print(model)
         return model
+    
+    def ADM_symmetric_aware_geometry_distance(self, x1, x2):
+        """
+        The custom distance function that take into consideration of the symmetry of ADM
+        Takes the four permutations that result int the same geometry and output the smallest one
+        """
+        seq_1 = torch.tensor([0, 1, 3, 2, 5, 4, 7, 6, 9, 8, 11, 10, 13, 12], requires_grad=False)
+        seq_2 = torch.tensor([0, 1, 4, 5, 2, 3, 8, 9, 6, 7, 12, 13, 10, 11], requires_grad=False)
+        seq_3 = torch.tensor([0, 1, 5, 4, 3, 2, 9, 8, 7, 6, 13, 12, 11, 10], requires_grad=False)
+        P1 = x1[:, seq_1]  # 0, 1 index are h, p that are constant
+        # case:3 -- 2301
+        P2 = x1[:, seq_2]
+        # case:4 -- 3210
+        P3 = x1[:, seq_3]
+        dist_0 = torch.mean(torch.square(x1 - x2), axis=1)
+        dist_1 = torch.mean(torch.square(P1 - x2), axis=1)
+        dist_2 = torch.mean(torch.square(P2 - x2), axis=1)
+        dist_3 = torch.mean(torch.square(P3 - x2), axis=1)
+        Distance_mat = torch.vstack([dist_0, dist_1, dist_2, dist_3])
+        print('shape of distance mat', Distance_mat.size())
+        min_distance, indices = torch.min(Distance_mat, dim=0)
+        print(type(min_distance))
+        print('shape of min_distances', min_distance.size())
+        return torch.mean(min_distance)
 
     def make_loss(self, logit=None, labels=None, G=None, return_long=False, epoch=None):
         """
@@ -94,28 +118,13 @@ class Network(object):
         """
         if logit is None:
             return None
-        MSE_loss = nn.functional.mse_loss(logit, labels)          # The MSE Loss
-        BDY_loss = 0
-        MD_loss = 0
-        if G is not None:         # This is using the boundary loss
-            X_range, X_lower_bound, X_upper_bound = self.get_boundary_lower_bound_uper_bound()
-            X_mean = (X_lower_bound + X_upper_bound) / 2        # Get the mean
-            relu = torch.nn.ReLU()
-            BDY_loss_all = 1 * relu(torch.abs(G - self.build_tensor(X_mean)) - 0.5 * self.build_tensor(X_range))
-            BDY_loss = 0.1*torch.sum(BDY_loss_all)
-            #BDY_loss = self.flags.BDY_strength*torch.sum(BDY_loss_all)
-        
-        # Adding a pairwise MD loss for back propagation, it needs to be open as well as in the signified start and end epoch
-        if  self.flags.md_coeff > 0 and G is not None and epoch > self.flags.md_start and epoch < self.flags.md_end:
-            pairwise_dist_mat = torch.cdist(G, G, p=2)      # Calculate the pairwise distance
-            MD_loss = torch.mean(relu(- pairwise_dist_mat + self.flags.md_radius))
-            MD_loss *= self.flags.md_coeff
-            #print('MD_loss = ', MD_loss)
-            #print('MSE loss = ', MSE_loss)
-
-        self.MSE_loss = MSE_loss
-        self.Boundary_loss = BDY_loss
-        return torch.add(torch.add(MSE_loss, BDY_loss), MD_loss)
+        ADM_symmetry = True             # The switch for considering the ADM symmetry
+        if ADM_symmetry and 'Yang' in self.flags.data_set:
+            MSE_loss = self.ADM_symmetric_aware_geometry_distance(logit, labels)
+            print('shape of MSE loss', MSE_loss.size())
+        else:
+            MSE_loss = nn.functional.mse_loss(logit, labels)          # The MSE Loss
+        return MSE_loss
 
 
     def build_tensor(self, nparray, requires_grad=False):
